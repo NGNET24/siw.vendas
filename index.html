@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Vendas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .login-form {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .btn-login {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .btn-login:hover {
+            background-color: #45a049;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        /* Estilos para os quadrados de produto */
+        
+        .product-square {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .product-square h3 {
+            margin-top: 0;
+        }
+        
+        .product-square p {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="login-container">
+        <h2>Login</h2>
+        <form class="login-form" id="login-form">
+            <div class="form-group">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+    </div>
+
+    <div class="container hidden" id="main-container">
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'cadastro')" id="defaultOpen">Cadastro de Produto</button>
+            <button class="tablinks" onclick="openTab(event, 'produtos')">Produtos Cadastrados</button>
+        </div>
+
+        <div id="cadastro" class="tabcontent">
+            <h2>Cadastro de Produto</h2>
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="product-name">Nome do Produto:</label>
+                    <input type="text" id="product-name" name="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-quantity">Quantidade de produtos:</label>
+                    <input type="number" id="product-quantity" name="product-quantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-value">Valor do Produto:</label>
+                    <input type="number" id="product-value" name="product-value" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-profit">Lucro do Produto:</label>
+                    <input type="number" id="product-profit" name="product-profit" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="buyer-name">Nome do Comprador:</label>
+                    <input type="text" id="buyer-name" name="buyer-name">
+                </div>
+                <div class="form-group">
+                    <label for="payment-date">Data do Pagamento:</label>
+                    <input type="date" id="payment-date" name="payment-date">
+                </div>
+                <button type="submit" class="btn-submit">Cadastrar Produto</button>
+            </form>
+        </div>
+
+        <div id="produtos" class="tabcontent">
+            <h2>Produtos Cadastrados</h2>
+            <div id="product-grid" class="grid-container">
+                <!-- Aqui serão adicionados os produtos cadastrados em quadrados -->
+            </div>
+            <h2>Total dos Valores dos Produtos</h2>
+            <p id="total-value">R$ 0.00</p>
+            <h2>Total do Lucro dos Produtos</h2>
+            <p id="total-profit">R$ 0.00</p>
+            <h2>Total dos Valores dos Produtos Pagos</h2>
+            <p id="total-paid-value">R$ 0.00</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Verifica as credenciais
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            if (username === '1234' && password === '1234') {
+                document.getElementById('login-container').classList.add('hidden');
+                document.getElementById('main-container').classList.remove('hidden');
+                document.getElementById("defaultOpen").click(); // Abre a aba de cadastro por padrão
+            } else {
+                alert('Usuário ou senha incorretos.');
+            }
+        });
+
+        document.getElementById('product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Captura os valores dos campos do formulário
+            var productName = document.getElementById('product-name').value;
+            var productQuantity = document.getElementById('product-quantity').value;
+            var productValue = document.getElementById('product-value').value;
+            var productProfit = document.getElementById('product-profit').value;
+            var buyerName = document.getElementById('buyer-name').value;
+            var paymentDate = document.getElementById('payment-date').value;
+
+            // Cria um novo quadrado de produto com os dados do produto cadastrado
+            var productGrid = document.getElementById('product-grid');
+            var newProductSquare = document.createElement('div');
+            newProductSquare.classList.add('product-square');
+            newProductSquare.innerHTML = `
+                <h3>${productName}</h3>
+                <p><strong>Quantidade em Estoque:</strong> ${productQuantity}</p>
+                <p><strong>Valor do Produto:</strong> R$ ${parseFloat(productValue).toFixed(2)}</p>
+                <p><strong>Lucro do Produto:</strong> R$ ${parseFloat(productProfit).toFixed(2)}</p>
+                <p><strong>Nome do Comprador:</strong> ${buyerName}</p>
+                <p><strong>Data do Pagamento:</strong> ${paymentDate}</p>
+                <input type="checkbox" class="product-paid"> Produto Pago
+                <button class="btn-delete">Excluir</button>
+            `;
+            productGrid.appendChild(newProductSquare);
+
+            // Limpa os campos do formulário após o cadastro
+            document.getElementById('product-form').reset();
+
+            // Atualiza o total dos valores dos produtos e o total do lucro
+            updateTotalValues();
+        });
+
+        document.getElementById('main-container').addEventListener('click', function(event) {
+            if (event.target.classList.contains('btn-delete')) {
+                var productSquare = event.target.parentNode;
+                productSquare.parentNode.removeChild(productSquare);
+
+                // Atualiza o total dos valores dos produtos e o total do lucro
+                updateTotalValues();
+            }
+        });
+
+        function updateTotalValues() {
+            var totalValue = 0;
+            var totalProfit = 0;
+            var totalPaidValue = 0;
+            var productSquares = document.querySelectorAll('.product-square');
+            productSquares.forEach(function(square) {
+                var productValue = parseFloat(square.querySelector('p:nth-child(3)').textContent.replace('Valor do Produto: R$ ', ''));
+                var productProfit = parseFloat(square.querySelector('p:nth-child(4)').textContent.replace('Lucro do Produto: R$ ', ''));
+                totalValue += productValue;
+                totalProfit += productProfit;
+                if (square.querySelector('.product-paid').checked) {
+                    totalPaidValue += productValue;
+                }
+            });
+            document.getElementById('total-value').textContent = 'R$ ' + totalValue.toFixed(2);
+            document.getElementById('total-profit').textContent = 'R$ ' + totalProfit.toFixed(2);
+            document.getElementById('total-paid-value').textContent = 'R$ ' + totalPaidValue.toFixed(2);
+        }
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</body>
+
+</html>
